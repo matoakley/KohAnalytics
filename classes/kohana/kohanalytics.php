@@ -60,7 +60,10 @@ abstract class Kohana_Kohanalytics
 			$end_date = date('Y-m-d');
 		}
 	
-		$results = $this->_gapi->requestReportData($this->_config['report_id'], array('date'), array('visits'), NULL, NULL, $start_date, $end_date);
+		// Work out the size for the container needed to hold the results, else we get results missed!
+    $days = floor((strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24)) + 2;
+	
+		$results = $this->_gapi->requestReportData($this->_config['report_id'], array('date'), array('visits'), NULL, NULL, $start_date, $end_date, 1, $days);
 	
 		$visits = array();
 		foreach ($results as $r)
