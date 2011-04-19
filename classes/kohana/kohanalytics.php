@@ -27,6 +27,9 @@ abstract class Kohana_Kohanalytics
 	protected $_config;
 	protected $_gapi;
 	
+	protected $start_date;
+	protected $end_date;
+	
 	/**
 	 * Loads configuration options.
 	 *
@@ -41,6 +44,10 @@ abstract class Kohana_Kohanalytics
 		require Kohana::find_file('vendor', 'GAPI/gapi.class');
 		
 		$this->_gapi = new gapi($this->_config['username'], $this->_config['password']);
+		
+		// Set the default start and end dates. Maybe take this into config?
+		$this->start_date = date('Y-m-d', strtotime('1 month ago'));
+		$this->end_date = date('Y-m-d');
 	}
 	
 	public function request_account_data()
@@ -74,5 +81,23 @@ abstract class Kohana_Kohanalytics
 		ksort($visits);
 	
 		return $visits;
+	}
+	
+	public function query($dimension, $metric, $sort = NULL, $max_results = NULL)
+	{
+		if ( ! is_null($sort))
+		{
+			$sort = array($sort);
+		}
+		
+		$results = $this->_gapi->requestReportData($this->_config['report_id'], array($dimension), array($metric), $sort, NULL, $this->start_date, $this->end_date, 1, $max_results);
+		
+		$data = array();
+		foreach ($results as $result)
+		{
+			$data[$result->{'get'.ucwords($dimension)}()] = $result->{'get'.ucwords($metric)}();
+		}
+		
+		return $data;
 	}
 }
