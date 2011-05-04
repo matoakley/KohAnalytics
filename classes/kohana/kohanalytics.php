@@ -83,6 +83,35 @@ abstract class Kohana_Kohanalytics
 		return $visits;
 	}
 	
+	public function monthly_visit_count($start_date = FALSE, $end_date = FALSE)
+	{
+		if ( ! $start_date)
+		{
+			$start_date = date('Y-m-d', strtotime('6 months ago'));
+		}
+		
+		if ( ! $end_date)
+		{
+			$end_date = date('Y-m-d', strtotime('1 month ago'));
+		}
+	
+		// Work out the size for the container needed to hold the results, else we get results missed!
+    $months = floor((strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24 * 30)) + 2;
+	
+		$results = $this->_gapi->requestReportData($this->_config['report_id'], array('month'), array('visits'), array('-month'), NULL, $start_date, $end_date, 1, $months);
+	
+		$visits = array();
+		foreach ($results as $r)
+		{	
+			if ($r->getVisits() > 0)
+			{
+				$visits[$r->getMonth()] = $r->getVisits();
+			}
+		}
+	
+		return $visits;
+	}
+	
 	public function query($dimension, $metric, $sort = NULL, $max_results = NULL)
 	{
 		if ( ! is_null($sort))
