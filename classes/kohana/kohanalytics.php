@@ -87,12 +87,12 @@ abstract class Kohana_Kohanalytics
 	{
 		if ( ! $start_date)
 		{
-			$start_date = date('Y-m-d', strtotime('6 months ago'));
+			$start_date = date('Y-m-d', strtotime('first day of 6 months ago'));
 		}
 		
 		if ( ! $end_date)
 		{
-			$end_date = date('Y-m-d', strtotime('1 month ago'));
+			$end_date = date('Y-m-d', strtotime('last day of last month'));
 		}
 	
 		// Work out the size for the container needed to hold the results, else we get results missed!
