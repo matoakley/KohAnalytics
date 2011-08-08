@@ -401,7 +401,7 @@ class gapi
   protected function authenticateUser($email, $password)
   {
     $post_variables = array(
-      'accountType' => 'GOOGLE',
+      'accountType' => 'HOSTED_OR_GOOGLE',
       'Email' => $email,
       'Passwd' => $password,
       'source' => gapi::interface_name,
