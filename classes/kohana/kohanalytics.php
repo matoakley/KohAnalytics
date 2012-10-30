@@ -103,10 +103,7 @@ abstract class Kohana_Kohanalytics
 		$visits = array();
 		foreach ($results as $r)
 		{	
-			if ($r->getVisits() > 0)
-			{
 				$visits[$r->getMonth()] = $r->getVisits();
-			}
 		}
 	
 		return $visits;
